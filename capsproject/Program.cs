@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using capsproject.Data;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,15 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// Serve default wwwroot static files
+app.UseStaticFiles();
+// Also serve static files from the project's Content folder at the '/Content' request path
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Content")),
+    RequestPath = "/Content"
+});
 
 app.UseAuthorization();
 

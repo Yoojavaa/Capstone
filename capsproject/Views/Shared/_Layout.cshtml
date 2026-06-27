@@ -1,50 +1,113 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - capsproject</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/capsproject.styles.css" asp-append-version="true" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - DriveWise</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+    @RenderSection("styles", required: false)
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">capsproject</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+    <div class="app-shell">
+
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-droplet"></i></div>
+                <div class="brand-text">
+                    <span class="brand-name">DriveWise</span>
+                    <span class="brand-sub">Flood Monitoring System</span>
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+
+            <nav class="nav-menu">
+                <a href="@Url.Action("Index", "Dashboard")" class="nav-item active">
+                    <i class="fa-solid fa-grid-2"></i><span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-location-dot"></i><span>Live Map</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-water"></i><span>Sensors</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-bell"></i><span>Alerts</span>
+                    <span class="nav-badge">@(ViewBag.UnreadAlerts ?? 7)</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-route"></i><span>Route Planner</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-file-lines"></i><span>Reports</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-regular fa-circle-question"></i><span>Logs</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-users"></i><span>Users</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fa-solid fa-gear"></i><span>Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status-card">
+                    <span class="status-title">System Status</span>
+                    <span class="status-line"><i class="fa-solid fa-circle status-dot"></i> All Systems Online</span>
+                </div>
+                <div class="clock-card">
+                    <span class="clock-time" id="clockTime">--:--:-- --</span>
+                    <span class="clock-date" id="clockDate">-- -- ----</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ============ MAIN ============ -->
+        <div class="main-area">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="icon-btn" id="sidebarToggle" aria-label="Toggle menu"><i class="fa-solid fa-bars"></i></button>
+                    <span class="welcome-text">Welcome, Admin <i class="fa-solid fa-circle-check verified"></i></span>
+                </div>
+                <div class="topbar-right">
+                    <div class="city-select">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Davao City</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <button class="icon-btn bell-btn" aria-label="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="bell-count">@(ViewBag.UnreadAlerts ?? 7)</span>
+                    </button>
+                    <div class="admin-chip">
+                        <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="admin-meta">
+                            <span class="admin-name">Admin</span>
+                            <span class="admin-role">Administrator</span>
+                        </div>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                @RenderBody()
+            </main>
+
+            <footer class="page-footer">
+                &copy; @DateTime.Now.Year DriveWise Flood Monitoring System | Davao City
+            </footer>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - capsproject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+    <script src="~/Scripts/dashboard.js"></script>
+    @RenderSection("scripts", required: false)
 </body>
 </html>

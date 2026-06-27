@@ -1,0 +1,233 @@
+@model DriveWise.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.UnreadAlerts = Model.UnreadAlerts;
+}
+
+<!-- ============ STAT CARDS ============ -->
+<section class="stat-grid">
+    <div class="stat-card">
+        <div class="stat-icon icon-blue"><i class="fa-solid fa-water"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">Total Sensors</span>
+            <span class="stat-value">@Model.TotalSensors</span>
+            <span class="stat-sub">Online: @Model.OnlineSensors | Offline: @Model.OfflineSensors</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-green"><i class="fa-solid fa-tower-observation"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">Normal (Green)</span>
+            <span class="stat-value text-green">@Model.NormalCount</span>
+            <span class="stat-sub">@($"{Model.NormalPercent}% of Total")</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-yellow"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">Warning (Yellow)</span>
+            <span class="stat-value text-yellow">@Model.WarningCount</span>
+            <span class="stat-sub">@($"{Model.WarningPercent}% of Total")</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-red"><i class="fa-solid fa-water"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">Danger (Red)</span>
+            <span class="stat-value text-red">@Model.DangerCount</span>
+            <span class="stat-sub">@($"{Model.DangerPercent}% of Total")</span>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon icon-blue"><i class="fa-solid fa-cloud-rain"></i></div>
+        <div class="stat-body">
+            <span class="stat-label">Rainfall (Today)</span>
+            <span class="stat-value text-blue">@Model.RainfallTodayMm.ToString("0.0") mm</span>
+            <span class="stat-sub">@Model.RainfallDescription</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============ MAIN GRID: MAP + SIDE PANEL ============ -->
+<section class="content-grid">
+
+    <div class="left-column">
+
+        <!-- LIVE MAP -->
+        <div class="panel map-panel">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <h3>Live Flood Map</h3>
+                    <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE</span>
+                </div>
+                <div class="traffic-toggle">
+                    <span>Traffic Layer</span>
+                    <label class="switch">
+                        <input type="checkbox" checked />
+                        <span class="slider-pill"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="map-canvas" id="floodMap">
+                <div class="map-grid-bg"></div>
+                <div class="map-river map-river-1"></div>
+                <div class="map-river map-river-2"></div>
+                <div class="map-city-label">Davao City</div>
+
+                @foreach (var s in Model.Sensors)
+                {
+                    var statusClass = s.Status.ToString().ToLower();
+                    <div class="map-pin pin-@statusClass"
+                         style="left:@(s.Lng)%; top:@(s.Lat)%;"
+                         title="@s.Location — @(s.WaterLevelCm) cm (@s.Status)">
+                        <i class="fa-solid fa-water"></i>
+                    </div>
+                }
+
+                <div class="map-controls">
+                    <button class="map-ctrl-btn" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                    <button class="map-ctrl-btn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
+                    <button class="map-ctrl-btn" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
+                </div>
+
+                <div class="map-legend">
+                    <span><i class="fa-solid fa-circle dot-green"></i> Normal (Green)</span>
+                    <span><i class="fa-solid fa-circle dot-yellow"></i> Warning (Yellow)</span>
+                    <span><i class="fa-solid fa-circle dot-red"></i> Danger (Red)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM ROW: CHART + SENSOR TABLE -->
+        <div class="bottom-row">
+            <div class="panel chart-panel">
+                <div class="panel-header">
+                    <h3>Water Level Overview <span class="panel-sub">(cm)</span></h3>
+                    <select class="range-select">
+                        <option>Today</option>
+                        <option>This Week</option>
+                        <option>This Month</option>
+                    </select>
+                </div>
+                <div class="chart-wrap">
+                    <canvas id="waterLevelChart" height="220"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <span><i class="fa-solid fa-circle dot-green"></i> Normal (&lt; @Model.NormalThresholdCm cm)</span>
+                    <span><i class="fa-solid fa-circle dot-yellow"></i> Warning (@Model.NormalThresholdCm&ndash;@Model.WarningThresholdCm cm)</span>
+                    <span><i class="fa-solid fa-circle dot-red"></i> Danger (&gt; @Model.WarningThresholdCm cm)</span>
+                </div>
+            </div>
+
+            <div class="panel table-panel">
+                <div class="panel-header">
+                    <h3>Sensor Status</h3>
+                    <a href="#" class="view-all-link">View All</a>
+                </div>
+                <div class="table-scroll">
+                    <table class="sensor-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Location</th>
+                                <th>Water Level</th>
+                                <th>Status</th>
+                                <th>Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in Model.Sensors.Take(5))
+                            {
+                                var statusClass = s.Status.ToString().ToLower();
+                                <tr>
+                                    <td><span class="row-id">@s.Code</span></td>
+                                    <td>@s.Location</td>
+                                    <td>@(s.WaterLevelCm) cm</td>
+                                    <td><span class="status-pill pill-@statusClass">@s.Status.ToString().ToUpper()</span></td>
+                                    <td>@s.UpdatedAt.ToString("hh:mm tt")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT SIDE PANEL -->
+    <div class="right-column">
+
+        <div class="panel alerts-panel">
+            <div class="panel-header">
+                <h3>Recent Alerts</h3>
+                <a href="#" class="view-all-link">View All</a>
+            </div>
+            <div class="alert-list">
+                @foreach (var a in Model.RecentAlerts)
+                {
+                    var statusClass = a.Status.ToString().ToLower();
+                    <div class="alert-item alert-@statusClass">
+                        <i class="@(a.Status == DriveWise.Models.SensorStatus.Normal ? "fa-solid fa-circle-check" : "fa-solid fa-triangle-exclamation")"></i>
+                        <div class="alert-body">
+                            <span class="alert-loc">@a.Location</span>
+                            <span class="alert-detail">
+                                Water level: @(a.WaterLevelCm) cm
+                                <span class="status-word status-word-@statusClass">(@a.Status.ToString().ToUpper())</span>
+                            </span>
+                        </div>
+                        <span class="alert-time">@a.RaisedAt.ToString("hh:mm tt")</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="panel weather-panel">
+            <h3>Weather &ndash; @Model.CityName</h3>
+            <div class="weather-main">
+                <div class="weather-icon"><i class="fa-solid fa-cloud-rain"></i></div>
+                <span class="weather-temp">@(Model.Weather.TemperatureC)&deg;C</span>
+            </div>
+            <span class="weather-condition">@Model.Weather.Condition</span>
+
+            <div class="weather-grid">
+                <div class="weather-stat"><span class="w-label">Humidity</span><span class="w-value">@($"{Model.Weather.HumidityPercent}%")</span></div>
+                <div class="weather-stat"><span class="w-label">Wind</span><span class="w-value">@Model.Weather.WindKmh km/h</span></div>
+                <div class="weather-stat"><span class="w-label">Rain Today</span><span class="w-value">@(@Model.Weather.RainTodayMm.ToString("0.0")) mm</span></div>
+                <div class="weather-stat"><span class="w-label">Forecast</span><span class="w-value text-red">@Model.Weather.Forecast</span></div>
+            </div>
+        </div>
+
+        <div class="panel route-panel">
+            <div class="panel-header">
+                <h3>Route Planner <span class="panel-sub">(Quick)</span></h3>
+                <i class="fa-solid fa-rotate-right refresh-icon"></i>
+            </div>
+            <div class="route-input">
+                <i class="fa-solid fa-location-dot pin-blue"></i>
+                <input type="text" placeholder="Enter Origin" />
+            </div>
+            <div class="route-input">
+                <i class="fa-solid fa-location-dot pin-red"></i>
+                <input type="text" placeholder="Enter Destination" />
+            </div>
+            <button class="find-route-btn"><i class="fa-solid fa-route"></i> Find Safe Route</button>
+        </div>
+
+    </div>
+</section>
+
+@using System.Text.Json
+
+@section scripts {
+    <script>
+        window.__waterLevelLabels = @Html.Raw(JsonSerializer.Serialize(Model.WaterLevelHistory.Select(p => p.TimeLabel)));
+        window.__waterLevelData = @Html.Raw(JsonSerializer.Serialize(Model.WaterLevelHistory.Select(p => p.LevelCm)));
+        window.__normalThreshold = @Model.NormalThresholdCm;
+        window.__warningThreshold = @Model.WarningThresholdCm;
+    </script>
+}
