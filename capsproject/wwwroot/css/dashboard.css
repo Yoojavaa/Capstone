@@ -78,7 +78,7 @@ button { font-family: inherit; cursor: pointer; }
 .brand-sub { font-size: 11px; color: #8b97b3; }
 
 .nav-menu { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-
+/* Sidebar navigation items */
 .nav-item {
     display: flex;
     align-items: center;
