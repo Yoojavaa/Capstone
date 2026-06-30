@@ -1,0 +1,64 @@
+@model DriveWise.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Live Map";
+}
+
+<section class="page-section">
+
+    <div class="content-placeholder">
+        <div class="placeholder-icon">
+            <i class="fa-solid fa-map"></i>
+        </div>
+        <h2>Live Flood Map</h2>
+        <p>Interactive map showing real-time sensor locations and flood status across Davao City.</p>
+
+        <div class="panel map-panel" style="margin-top: 20px;">
+            <div class="panel-header">
+                <div class="panel-title-group">
+                    <h3>Live Flood Map</h3>
+                    <span class="live-badge"><i class="fa-solid fa-circle"></i> LIVE</span>
+                </div>
+                <div class="traffic-toggle">
+                    <span>Traffic Layer</span>
+                    <label class="switch">
+                        <input type="checkbox" checked />
+                        <span class="slider-pill"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="map-canvas" id="floodMap"></div>
+            <div class="map-controls">
+                <button class="map-ctrl-btn" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                <button class="map-ctrl-btn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
+                <button class="map-ctrl-btn" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
+            </div>
+            <div class="map-legend">
+                <span><i class="fa-solid fa-circle dot-green"></i> Normal (Green)</span>
+                <span><i class="fa-solid fa-circle dot-yellow"></i> Warning (Yellow)</span>
+                <span><i class="fa-solid fa-circle dot-red"></i> Danger (Red)</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@using System.Text.Json
+
+@section styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+}
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        window.__sensorData = @Html.Raw(JsonSerializer.Serialize(Model.Sensors.Select(s => new {
+            code = s.Code,
+            location = s.Location,
+            waterLevelCm = s.WaterLevelCm,
+            status = s.Status.ToString().ToLower(),
+            lat = s.Lat,
+            lng = s.Lng,
+            online = s.Online
+        })));
+    </script>
+    <script src="~/js/leaflet-map.js"></script>
+}

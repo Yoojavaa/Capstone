@@ -1,0 +1,96 @@
+@model DriveWise.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Reports";
+}
+
+<section class="page-section">
+    <div class="section-header">
+        <h1>Reports</h1>
+        <p class="section-subtitle">Generate and view system reports</p>
+    </div>
+
+    <div class="content-placeholder">
+        <div class="placeholder-icon">
+            <i class="fa-solid fa-file-lines"></i>
+        </div>
+        <h2>Report Generation</h2>
+        <p>Generate detailed reports on flood incidents, sensor data, and system performance.</p>
+
+        <div style="margin-top: 30px; text-align: left;">
+            <p><strong>Available Reports:</strong></p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Daily flood incident reports</li>
+                <li>Sensor performance analysis</li>
+                <li>Historical trend analysis</li>
+                <li>System uptime and reliability</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<style>
+    .page-section {
+        padding: 28px;
+    }
+
+    .section-header {
+        margin-bottom: 28px;
+    }
+
+    .section-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 4px 0;
+    }
+
+    .section-subtitle {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .content-placeholder {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .placeholder-icon {
+        font-size: 48px;
+        color: var(--green);
+        margin-bottom: 16px;
+    }
+
+    .content-placeholder h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 8px 0;
+    }
+
+    .content-placeholder p {
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .content-placeholder ul {
+        color: var(--text-main);
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .content-placeholder ul li {
+        padding: 6px 0;
+        color: var(--text-muted);
+    }
+
+    .content-placeholder ul li:before {
+        content: "✓ ";
+        color: var(--green);
+        font-weight: 700;
+        margin-right: 8px;
+    }
+</style>

@@ -22,11 +22,104 @@
     // ---------- Mobile sidebar toggle ----------
     var toggleBtn = document.getElementById("sidebarToggle");
     var sidebar = document.querySelector(".sidebar");
+    var navItems = document.querySelectorAll(".nav-item");
+    var mainArea = document.querySelector(".main-area");
+
+    console.log("=== SIDEBAR INITIALIZATION ===");
+    console.log("Toggle button found:", !!toggleBtn);
+    console.log("Sidebar found:", !!sidebar);
+    console.log("Nav items found:", navItems.length);
+    console.log("Main area found:", !!mainArea);
+
+    // === HAMBURGER MENU TOGGLE ===
     if (toggleBtn && sidebar) {
-        toggleBtn.addEventListener("click", function () {
-            sidebar.classList.toggle("open");
+        toggleBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isOpen = sidebar.classList.contains("open");
+            console.log("Hamburger clicked! Current state open:", isOpen);
+
+            if (isOpen) {
+                // If open, close it
+                sidebar.classList.remove("open");
+                console.log("✓ Sidebar CLOSED");
+            } else {
+                // If closed, open it
+                sidebar.classList.add("open");
+                console.log("✓ Sidebar OPENED");
+            }
         });
     }
+
+    // === SET ACTIVE NAV ITEM BASED ON CURRENT URL ===
+    function setActiveNavItem() {
+        // Get current URL path
+        var currentPath = window.location.pathname.toLowerCase();
+        console.log("Current page path:", currentPath);
+
+        // Remove active class from all nav items
+        navItems.forEach(function(item) {
+            item.classList.remove("active");
+        });
+
+        // Find and highlight the matching nav item
+        navItems.forEach(function(item) {
+            var href = item.getAttribute("href");
+            if (href) {
+                href = href.toLowerCase();
+                // Match the href with current path
+                if (href.includes(currentPath) || currentPath.includes(href.replace(/^\//, ""))) {
+                    item.classList.add("active");
+                    console.log("✓ Activated nav item:", href);
+                }
+            }
+        });
+
+        // If no match found, highlight Dashboard by default
+        if (!document.querySelector(".nav-item.active")) {
+            if (currentPath.includes("dashboard") || currentPath === "/") {
+                navItems[0].classList.add("active");
+                console.log("✓ Defaulted to Dashboard");
+            }
+        }
+    }
+
+    // Call on page load
+    setActiveNavItem();
+
+    // === CLOSE SIDEBAR WHEN NAV ITEM IS CLICKED ===
+    navItems.forEach(function(item) {
+        item.addEventListener("click", function(e) {
+            // Close sidebar after nav click
+            if (sidebar && sidebar.classList.contains("open")) {
+                sidebar.classList.remove("open");
+                console.log("✓ Sidebar closed after nav click");
+            }
+        });
+    });
+
+    // === CLOSE SIDEBAR WHEN CLICKING OUTSIDE ===
+    document.addEventListener("click", function(e) {
+        if (sidebar && sidebar.classList.contains("open")) {
+            // Check if click is outside sidebar and not on toggle button
+            var isClickInsideSidebar = sidebar.contains(e.target);
+            var isClickOnToggle = toggleBtn && toggleBtn.contains(e.target);
+
+            if (!isClickInsideSidebar && !isClickOnToggle) {
+                sidebar.classList.remove("open");
+                console.log("✓ Sidebar closed (clicked outside)");
+            }
+        }
+    });
+
+    // === CLOSE SIDEBAR ON WINDOW RESIZE (if goes above 768px) ===
+    window.addEventListener("resize", function() {
+        if (window.innerWidth > 768 && sidebar && sidebar.classList.contains("open")) {
+            sidebar.classList.remove("open");
+            console.log("✓ Sidebar closed (window resized > 768px)");
+        }
+    });
 
     // ---------- Water level chart ----------
     var canvas = document.getElementById("waterLevelChart");

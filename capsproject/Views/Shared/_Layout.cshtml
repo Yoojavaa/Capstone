@@ -26,32 +26,32 @@
             </div>
 
             <nav class="nav-menu">
-                <a href="@Url.Action("Index", "Dashboard")" class="nav-item active">
+                <a href="@Url.Action("Index", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-grid-2"></i><span>Dashboard</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Map", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-location-dot"></i><span>Live Map</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Sensors", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-water"></i><span>Sensors</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Alerts", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-bell"></i><span>Alerts</span>
                     <span class="nav-badge">@(ViewBag.UnreadAlerts ?? 7)</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("RoutePlanner", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-route"></i><span>Route Planner</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Reports", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-file-lines"></i><span>Reports</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Logs", "Dashboard")" class="nav-item">
                     <i class="fa-regular fa-circle-question"></i><span>Logs</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Users", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-users"></i><span>Users</span>
                 </a>
-                <a href="#" class="nav-item">
+                <a href="@Url.Action("Settings", "Dashboard")" class="nav-item">
                     <i class="fa-solid fa-gear"></i><span>Settings</span>
                 </a>
             </nav>

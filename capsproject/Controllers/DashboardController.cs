@@ -15,6 +15,70 @@ namespace DriveWise.Controllers
             return View(model);
         }
 
+        // GET: /Dashboard/Map
+        public ActionResult Map()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Live Map";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Sensors
+        public ActionResult Sensors()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Sensors";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Alerts
+        public ActionResult Alerts()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Alerts";
+            return View(model);
+        }
+
+        // GET: /Dashboard/RoutePlanner
+        public ActionResult RoutePlanner()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Route Planner";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Reports
+        public ActionResult Reports()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Reports";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Logs
+        public ActionResult Logs()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Logs";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Users
+        public ActionResult Users()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Users";
+            return View(model);
+        }
+
+        // GET: /Dashboard/Settings
+        public ActionResult Settings()
+        {
+            var model = BuildMockDashboard();
+            ViewBag.Title = "Settings";
+            return View(model);
+        }
+
         // GET: /Dashboard/Refresh
         // Lightweight endpoint the front-end can poll (e.g. every 30s) to refresh
         // sensor cards / map / alerts without a full page reload.

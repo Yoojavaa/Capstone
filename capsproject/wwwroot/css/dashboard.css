@@ -52,6 +52,7 @@ button { font-family: inherit; cursor: pointer; }
     position: sticky;
     top: 0;
     height: 100vh;
+    z-index: 1000;
 }
 
 .brand {
@@ -89,7 +90,10 @@ button { font-family: inherit; cursor: pointer; }
     font-weight: 500;
     font-size: 13.5px;
     position: relative;
-    transition: background .15s, color .15s;
+    transition: background 0.15s ease, color 0.15s ease;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
 }
 
 .nav-item i { width: 18px; text-align: center; font-size: 14px; }
@@ -157,11 +161,38 @@ button { font-family: inherit; cursor: pointer; }
     border: none;
     font-size: 16px;
     color: var(--text-main);
-    width: 36px; height: 36px;
+    width: 36px;
+    height: 36px;
     border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.15s ease;
+    user-select: none;
 }
-.icon-btn:hover { background: var(--gray-bg); }
+
+.icon-btn:hover {
+    background: var(--gray-bg);
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
+}
+
+#sidebarToggle {
+    position: relative;
+    z-index: 1001;
+}
+
+#sidebarToggle:hover {
+    background: rgba(37, 99, 235, 0.1);
+    color: var(--blue);
+}
+
+#sidebarToggle:active {
+    transform: scale(0.9);
+}
 
 .welcome-text { font-weight: 700; font-size: 16px; }
 .verified { color: var(--blue); font-size: 14px; margin-left: 4px; }
@@ -931,5 +962,195 @@ input:checked + .slider-pill:before {
 .sensor-popup .offline {
     color: var(--red);
     font-weight: 600;
+}
+
+/* ============ RESPONSIVE & MOBILE STYLES ============ */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        z-index: 1000;
+        transform: translateX(-100%);
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        will-change: transform;
+    }
+
+    /* Sidebar is VISIBLE when .open class is present */
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 2px 0 24px rgba(0, 0, 0, 0.25);
+    }
+
+    /* Dark overlay that appears behind sidebar */
+    .app-shell::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0);
+        pointer-events: none;
+        z-index: 999;
+        transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Show overlay when sidebar is open */
+    .sidebar.open ~ .main-area::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.6);
+        pointer-events: auto;
+        z-index: 999;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 1024px) {
+    .stat-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stat-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .right-column {
+        order: -1;
+    }
+
+    .bottom-row {
+        grid-template-columns: 1fr;
+    }
+
+    .icon-btn {
+        display: flex;
+    }
+
+    .nav-item {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .nav-item i {
+        font-size: 16px;
+    }
+
+    .map-panel {
+        height: 350px;
+        min-height: 350px;
+    }
+
+    .chart-panel,
+    .table-panel {
+        min-height: 300px;
+    }
+
+    .weather-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .alert-item {
+        flex-wrap: wrap;
+    }
+
+    .alert-time {
+        order: -1;
+        width: 100%;
+        margin-bottom: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat-grid {
+        gap: 12px;
+    }
+
+    .stat-card {
+        padding: 14px 12px;
+        gap: 10px;
+    }
+
+    .stat-value {
+        font-size: 20px;
+    }
+
+    .topbar {
+        padding: 10px 16px;
+    }
+
+    .topbar-left,
+    .topbar-right {
+        gap: 12px;
+    }
+
+    .welcome-text {
+        display: none;
+    }
+
+    .city-select {
+        display: none;
+    }
+
+    .sidebar {
+        width: 70vw;
+    }
+
+    .brand-text span {
+        display: none;
+    }
+
+    .brand-name {
+        display: block;
+    }
+
+    .map-panel {
+        height: 280px;
+        min-height: 280px;
+    }
+
+    .page-content {
+        padding: 14px 16px;
+    }
+}
+
+/* Ensure nav items are always clickable */
+.nav-item,
+.nav-item a {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.nav-item:active {
+    transform: scale(0.98);
+}
+
+/* Improve button click feedback */
+.icon-btn {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.icon-btn:active {
+    transform: scale(0.95);
 }
 

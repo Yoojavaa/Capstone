@@ -1,0 +1,96 @@
+@model DriveWise.Models.DashboardViewModel
+@{
+    ViewBag.Title = "Route Planner";
+}
+
+<section class="page-section">
+    <div class="section-header">
+        <h1>Route Planner</h1>
+        <p class="section-subtitle">Find safe routes avoiding flooded areas</p>
+    </div>
+
+    <div class="content-placeholder">
+        <div class="placeholder-icon">
+            <i class="fa-solid fa-route"></i>
+        </div>
+        <h2>Safe Route Planning</h2>
+        <p>Get safe driving directions that avoid flooded streets and waterlogged areas.</p>
+
+        <div style="margin-top: 30px; text-align: left;">
+            <p><strong>Features:</strong></p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>Real-time route optimization</li>
+                <li>Flood avoidance algorithm</li>
+                <li>Alternative route suggestions</li>
+                <li>Travel time estimates</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<style>
+    .page-section {
+        padding: 28px;
+    }
+
+    .section-header {
+        margin-bottom: 28px;
+    }
+
+    .section-header h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 4px 0;
+    }
+
+    .section-subtitle {
+        font-size: 14px;
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .content-placeholder {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .placeholder-icon {
+        font-size: 48px;
+        color: var(--blue);
+        margin-bottom: 16px;
+    }
+
+    .content-placeholder h2 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0 0 8px 0;
+    }
+
+    .content-placeholder p {
+        color: var(--text-muted);
+        margin: 0;
+    }
+
+    .content-placeholder ul {
+        color: var(--text-main);
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .content-placeholder ul li {
+        padding: 6px 0;
+        color: var(--text-muted);
+    }
+
+    .content-placeholder ul li:before {
+        content: "✓ ";
+        color: var(--blue);
+        font-weight: 700;
+        margin-right: 8px;
+    }
+</style>
