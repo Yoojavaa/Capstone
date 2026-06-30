@@ -73,37 +73,22 @@
                 </div>
             </div>
 
-            <div class="map-canvas" id="floodMap">
-                <div class="map-grid-bg"></div>
-                <div class="map-river map-river-1"></div>
-                <div class="map-river map-river-2"></div>
-                <div class="map-city-label">Davao City</div>
+            <div class="map-canvas" id="floodMap"></div>
 
-                @foreach (var s in Model.Sensors)
-                {
-                    var statusClass = s.Status.ToString().ToLower();
-                    <div class="map-pin pin-@statusClass"
-                         style="left:@(s.Lng)%; top:@(s.Lat)%;"
-                         title="@s.Location — @(s.WaterLevelCm) cm (@s.Status)">
-                        <i class="fa-solid fa-water"></i>
-                    </div>
-                }
+            <div class="map-controls">
+                <button class="map-ctrl-btn" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+                <button class="map-ctrl-btn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
+                <button class="map-ctrl-btn" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
+            </div>
 
-                <div class="map-controls">
-                    <button class="map-ctrl-btn" aria-label="Fullscreen"><i class="fa-solid fa-expand"></i></button>
-                    <button class="map-ctrl-btn" aria-label="Zoom in"><i class="fa-solid fa-plus"></i></button>
-                    <button class="map-ctrl-btn" aria-label="Zoom out"><i class="fa-solid fa-minus"></i></button>
-                </div>
-
-                <div class="map-legend">
-                    <span><i class="fa-solid fa-circle dot-green"></i> Normal (Green)</span>
-                    <span><i class="fa-solid fa-circle dot-yellow"></i> Warning (Yellow)</span>
-                    <span><i class="fa-solid fa-circle dot-red"></i> Danger (Red)</span>
-                </div>
+            <div class="map-legend">
+                <span><i class="fa-solid fa-circle dot-green"></i> Normal (Green)</span>
+                <span><i class="fa-solid fa-circle dot-yellow"></i> Warning (Yellow)</span>
+                <span><i class="fa-solid fa-circle dot-red"></i> Danger (Red)</span>
             </div>
         </div>
 
-        <!-- BOTTOM ROW: CHART + SENSOR TABLE -->
+        <!-- BOTTOM ROW: CHART + TABLE -->
         <div class="bottom-row">
             <div class="panel chart-panel">
                 <div class="panel-header">
@@ -223,11 +208,28 @@
 
 @using System.Text.Json
 
+@section styles {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+}
+
 @section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script>
         window.__waterLevelLabels = @Html.Raw(JsonSerializer.Serialize(Model.WaterLevelHistory.Select(p => p.TimeLabel)));
         window.__waterLevelData = @Html.Raw(JsonSerializer.Serialize(Model.WaterLevelHistory.Select(p => p.LevelCm)));
         window.__normalThreshold = @Model.NormalThresholdCm;
         window.__warningThreshold = @Model.WarningThresholdCm;
+
+        // Sensor data for Leaflet map
+        window.__sensorData = @Html.Raw(JsonSerializer.Serialize(Model.Sensors.Select(s => new {
+            code = s.Code,
+            location = s.Location,
+            waterLevelCm = s.WaterLevelCm,
+            status = s.Status.ToString().ToLower(),
+            lat = s.Lat,
+            lng = s.Lng,
+            online = s.Online
+        })));
     </script>
+    <script src="~/js/leaflet-map.js"></script>
 }
